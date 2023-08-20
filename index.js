@@ -71,7 +71,7 @@ function gameEngine(ctime){
         streak=0;
         speed=5;
     }
-    if(score>5) speed = score;
+    if(score>5 && score<15) speed = score;
     if(snakeArr[0].y === food.y && snakeArr[0].x === food.x){
         if(streak===3 && superFoodFlag === 1) {
             streak = 0;
