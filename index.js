@@ -6,6 +6,7 @@ const gameOver = new Audio('gameover.mp3');
 const moveSound = new Audio('move.mp3');
 let speed =5;
 let streak=0;
+let hiscore = 0;
 let lastPaintTime = 0;
 let snakeArr = [
     {x: Math.round(2 + (16-2)* Math.random()), y: Math.round(2 + (16-2)* Math.random())}
@@ -16,6 +17,9 @@ let board = document.getElementById('board');
 let score=0;
 let food = {x: Math.round(2 + (16-2)* Math.random()), y: Math.round(2 + (16-2)* Math.random())}
 let scoreCard = document.getElementById('score');
+let HiScoreCard = document.getElementById('hiScore');
+
+
 function main(ctime){
     window.requestAnimationFrame(main);
     // consoleog(lastPaintTime);
@@ -26,12 +30,11 @@ function main(ctime){
     gameEngine(ctime);
 }
 let inputDir = {x:0,y:0};
-window.addEventListener('keydown',e=>{
-    
+function eventHandler(keyCode) {
     moveSound.play();
     // console.log(e.key);
 
-    switch (e.key) {
+    switch (keyCode) {
         case "ArrowUp":
             inputDir.x = 0;
             inputDir.y = -1;
@@ -51,6 +54,21 @@ window.addEventListener('keydown',e=>{
         default:
             break;
     }
+}
+const handleClick = (event) =>{
+    const dir = event;
+    // console.log(dir);
+    eventHandler(dir);
+}
+ArrowUp.addEventListener('click',e =>{handleClick('ArrowUp')});
+ArrowDown.addEventListener("click", e => {handleClick('ArrowDown')});
+ArrowRight.addEventListener("click", e => {handleClick('ArrowRight')});
+ArrowLeft.addEventListener("click", e => {handleClick('ArrowLeft')});
+
+window.addEventListener('keydown',e=>{
+    console.log(e.key);
+    handleClick(e.key);
+    
 })
 
 function isCollide(snake){
@@ -67,11 +85,15 @@ function gameEngine(ctime){
         inputDir = {x:0,y:0};
         alert('Game Over');
         snakeArr =[{x:13,y:13}];
+        if(score>hiscore){
+            HiScoreCard.innerText = "HighstScore: " + score;
+            hiscore = score;
+        }
         score = 0;
         streak=0;
         speed=5;
     }
-    if(score>5 && score<15) speed = score;
+    if(score>5 && score<12) speed = score;
     if(snakeArr[0].y === food.y && snakeArr[0].x === food.x){
         if(streak===3 && superFoodFlag === 1) {
             streak = 0;
